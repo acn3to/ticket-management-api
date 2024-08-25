@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16
+    container_name: db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ticket_management}
+      POSTGRES_USER: ${DB_USER:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - network
+
+  api:
+    build: .
+    container_name: api
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-ticket_management}
+      - DB_USER=${DB_USER:-user}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-3600000}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - network
+
+volumes:
+  postgres_data:
+
+networks:
+  network:
