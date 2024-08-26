@@ -5,7 +5,6 @@ import com.codecrafters.task_management_api.Enum.EPaymentMethods;
 import com.codecrafters.task_management_api.dtos.TicketRecordDto;
 import com.codecrafters.task_management_api.models.OrdersModel;
 import com.codecrafters.task_management_api.models.TicketManager;
-import com.codecrafters.task_management_api.models.UserModel;
 import com.codecrafters.task_management_api.repositories.OrdersRepository;
 import com.codecrafters.task_management_api.repositories.TicketManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
