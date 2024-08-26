@@ -2,6 +2,7 @@ package com.codecrafters.task_management_api.services;
 
 import com.codecrafters.task_management_api.Enum.EOrdersStatus;
 import com.codecrafters.task_management_api.Enum.EPaymentMethods;
+import com.codecrafters.task_management_api.dtos.OrderRecordDto;
 import com.codecrafters.task_management_api.dtos.TicketRecordDto;
 import com.codecrafters.task_management_api.models.OrdersModel;
 import com.codecrafters.task_management_api.models.TicketManager;
@@ -28,26 +29,26 @@ public class OrdersService {
     private TicketsManagerService ticketsManagerService;
 
 
-    public OrdersModel createOrder(UUID userId, UUID eventId, Map<UUID, String> ticketSeatMap, Integer batchNumber, BigDecimal price, EPaymentMethods paymentMethod) {
-        TicketManager ticketManager = ticketManagerRepository.findByEventModel_Id(eventId)
-                .orElseThrow(() -> new IllegalArgumentException("TicketManager not found for event ID: " + eventId));
+    public OrdersModel createOrder(OrderRecordDto orderRecordDto) {
+        TicketManager ticketManager = ticketManagerRepository.findByEventModel_Id(orderRecordDto.ticketRecordDto().eventId())
+                .orElseThrow(() -> new IllegalArgumentException("TicketManager not found for event ID: " + orderRecordDto.ticketRecordDto().eventId()));
 
         OrdersModel order = new OrdersModel();
         //order.setUserId(userId);
         order.setTicketManager(ticketManager);
-        order.setTotalAmount(price.multiply(BigDecimal.valueOf(ticketSeatMap.size())));
+        order.setTotalAmount(orderRecordDto.ticketRecordDto().price().multiply(BigDecimal.valueOf(orderRecordDto.ticketRecordDto().ticketSeat().size())));
         order.setOrderStatus(EOrdersStatus.Pending);
-        order.setPaymentMethods(paymentMethod);
-        order.setQuantityTickets(ticketSeatMap.size());
+        order.setPaymentMethods(orderRecordDto.paymentMethods());
+        order.setQuantityTickets(orderRecordDto.ticketRecordDto().ticketSeat().size());
 
         ordersRepository.save(order);
 
         TicketRecordDto ticketRecordDto = new TicketRecordDto(
-                eventId,
-                ticketSeatMap,
+                orderRecordDto.ticketRecordDto().eventId(),
+                orderRecordDto.ticketRecordDto().ticketSeat(),
                 ticketManager.getId(),
-                batchNumber,
-                price,
+                orderRecordDto.ticketRecordDto().batchNumber(),
+                orderRecordDto.ticketRecordDto().price(),
                 new Date()
         );
 

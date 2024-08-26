@@ -1,6 +1,7 @@
 package com.codecrafters.task_management_api.controllers;
 
 import com.codecrafters.task_management_api.Enum.EPaymentMethods;
+import com.codecrafters.task_management_api.dtos.OrderRecordDto;
 import com.codecrafters.task_management_api.models.OrdersModel;
 import com.codecrafters.task_management_api.services.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +20,18 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
+
     @PostMapping("/create")
     public ResponseEntity<OrdersModel> createOrder(
-            @RequestParam UUID userId,
-            @RequestParam UUID eventId,
-            @RequestBody Map<UUID, String> ticketSeatMap,
-            @RequestParam Integer batchNumber,
-            @RequestParam BigDecimal price,
-            @RequestParam EPaymentMethods paymentMethod
+            @RequestBody OrderRecordDto orderRecordDto
     ) {
         try {
-            OrdersModel order = ordersService.createOrder(userId, eventId, ticketSeatMap, batchNumber, price, paymentMethod);
+            OrdersModel order = ordersService.createOrder(orderRecordDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(order);
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
     @PostMapping("/cancel/{orderId}")
     public ResponseEntity<String> cancelOrder(@PathVariable UUID orderId) {
         try {

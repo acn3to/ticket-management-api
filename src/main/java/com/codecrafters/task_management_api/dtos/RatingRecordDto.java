@@ -1,4 +1,4 @@
-package com.example.ProjetoVendaIngressos.dtos;
+package com.codecrafters.task_management_api.dtos;
 
 import lombok.Data;
 
