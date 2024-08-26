@@ -23,7 +23,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Orders {
+public class OrdersModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

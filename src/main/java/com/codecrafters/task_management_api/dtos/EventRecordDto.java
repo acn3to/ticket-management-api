@@ -1,6 +1,6 @@
 package com.example.ProjetoVendaIngressos.dtos;
 
-import com.example.ProjetoVendaIngressos.models.EventCategory;
+import com.codecrafters.task_management_api.Enum.EventCategory;
 import lombok.Data;
 
 import java.math.BigDecimal;

@@ -1,6 +1,6 @@
 package com.codecrafters.task_management_api.specifications;
 
-import com.codecrafters.task_management_api.models.EventCategory;
+import com.codecrafters.task_management_api.Enum.EventCategory;
 import com.codecrafters.task_management_api.models.EventModel;
 import org.springframework.data.jpa.domain.Specification;
 

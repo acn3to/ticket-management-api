@@ -26,10 +26,10 @@ public class TicketManager {
     private EventModel eventModel;
 
     @OneToMany(mappedBy = "ticketManager",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Orders> orders;
+    private List<OrdersModel> orders;
 
     @OneToMany(mappedBy = "ticketManager",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Tickets> tickets;
+    private List<TicketsModel> tickets;
 
     private Integer ticketsQuantity;
 }

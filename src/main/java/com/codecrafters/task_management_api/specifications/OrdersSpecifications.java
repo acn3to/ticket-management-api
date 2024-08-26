@@ -1,6 +1,6 @@
 package com.codecrafters.task_management_api.specifications;
 
-import com.codecrafters.task_management_api.models.Orders;
+import com.codecrafters.task_management_api.models.OrdersModel;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class OrdersSpecifications {
 
-    public Specification<Orders> findOrderBy(
+    public Specification<OrdersModel> findOrderBy(
             Long userId,
             Long orderId,
             Date beforeDate,

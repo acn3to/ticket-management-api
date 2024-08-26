@@ -2,7 +2,6 @@ package com.codecrafters.task_management_api.models;
 
 import com.codecrafters.task_management_api.Enum.ETicketsStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,7 +20,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tickets {
+public class TicketsModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,8 +46,6 @@ public class Tickets {
     @Enumerated(EnumType.STRING)
     private ETicketsStatus ticketStatus;
 
-    @NotNull
-    private String qrcodeGenerate;
 
     @CreationTimestamp
     private Date dateTicketCreated;

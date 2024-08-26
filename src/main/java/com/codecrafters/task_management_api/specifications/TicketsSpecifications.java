@@ -1,6 +1,6 @@
 package com.codecrafters.task_management_api.specifications;
 
-import com.codecrafters.task_management_api.models.Tickets;
+import com.codecrafters.task_management_api.models.TicketsModel;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 public class TicketsSpecifications {
-    public Specification<Tickets> findTicketBy(
+    public Specification<TicketsModel> findTicketBy(
             Long eventId,
             Long ticketId,
             BigDecimal maxPrice,
@@ -64,7 +64,7 @@ public class TicketsSpecifications {
         }));
     }
 
-    public static Specification<Tickets> queryFindSimilarTickets(
+    public static Specification<TicketsModel> queryFindSimilarTickets(
             Long eventId
     ){
         return ((root, query, criteriaBuilder) -> {
