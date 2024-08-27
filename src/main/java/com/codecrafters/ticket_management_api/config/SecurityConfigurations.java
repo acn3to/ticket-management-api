@@ -34,6 +34,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 						.anyRequest().authenticated()
 				)
+				.cors((cors -> {}))
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
