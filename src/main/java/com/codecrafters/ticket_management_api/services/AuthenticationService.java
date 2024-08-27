@@ -73,6 +73,7 @@ public class AuthenticationService {
         System.out.println("User object created: " + newUser);
         System.out.println("Role set for user: " + newUser.getRole());
         System.out.println("Saving user to the database: " + newUser.getUsername());
+        System.out.println("UserId: " + newUser.getId());
 
         try {
             userRepository.save(newUser);

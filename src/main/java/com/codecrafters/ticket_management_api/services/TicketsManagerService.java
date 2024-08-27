@@ -26,12 +26,16 @@ public class TicketsManagerService {
     private EventRepository eventRepository;
 
 
-    public void purchaseTicket(TicketRecordDto ticketRecordDto) {
+    public TicketManager purchaseTicket(TicketRecordDto ticketRecordDto) {
         EventModel event = eventRepository.findById(ticketRecordDto.eventId())
                 .orElseThrow(() -> new IllegalArgumentException("Event not found with ID: " + ticketRecordDto.eventId()));
 
-        TicketManager ticketManager = ticketManagerRepository.findById(ticketRecordDto.ticketManagerId())
-                .orElseThrow(() -> new IllegalArgumentException("TicketManager not found with ID: " + ticketRecordDto.ticketManagerId()));
+        TicketManager ticketManager = ticketManagerRepository.findByEventModel(event)
+                .orElse(new TicketManager());
+        ticketManager.setTicketsQuantity(event.getMaxCapacity());
+        ticketManager.setEventModel(event);
+
+        ticketManager = ticketManagerRepository.save(ticketManager);
 
         Map<UUID,String> ticketAndSeat = ticketRecordDto.ticketSeat();
         if (ticketManager.getTicketsQuantity()<ticketAndSeat.size()){
@@ -41,28 +45,23 @@ public class TicketsManagerService {
             UUID ticketId = entry.getKey();
             String seatNumber = entry.getValue();
 
-            Optional<TicketsModel> ticketOptional = ticketsRepository.findById(ticketId);
-            if (ticketOptional.isPresent()){
-                TicketsModel ticket = ticketOptional.get();
-                if (ticket.getTicketStatus() == ETicketsStatus.Sold){
-                    throw new IllegalStateException("Ticket with id "+ ticketId+" has already been sold.");
-                }
-                if (ticket.getTicketStatus() == ETicketsStatus.Reserved){
-                    throw new IllegalStateException("Ticket with id "+ ticketId+" cannot be sold because it is reserved.");
-                }
-                ticket.setBatchNumber(ticketRecordDto.batchNumber());
-                ticket.setPrice(ticketRecordDto.price());
-                ticket.setSeatNumber(seatNumber);
-                ticket.setTicketStatus(ETicketsStatus.Sold);
-                ticket.setPurchaseDate(ticketRecordDto.purchaseDate());
+            TicketsModel ticket = new TicketsModel();
 
-                ticketsRepository.save(ticket);
-            }else {
-                throw new IllegalArgumentException("Ticket not found with ID: " + ticketId);
+            ticket.setBatchNumber(ticketRecordDto.batchNumber());
+            ticket.setPrice(ticketRecordDto.price());
+            ticket.setSeatNumber(seatNumber);
+            ticket.setTicketStatus(ETicketsStatus.Sold);
+            ticket.setPurchaseDate(ticketRecordDto.purchaseDate());
+            ticket.setEventModel(event);
+            ticket.setTicketManager(ticketManager);
+
+
+            ticketsRepository.save(ticket);
             }
-        }
+
         ticketManager.setTicketsQuantity(ticketManager.getTicketsQuantity() - ticketAndSeat.size());
         ticketManagerRepository.save(ticketManager);
+        return ticketManager;
     }
 
     public void cancelTicket(UUID ticketId) {
@@ -114,24 +113,25 @@ public class TicketsManagerService {
     }
 
 
-    public TicketsModel printTicketsDetails(UUID ticketId){
+    public TicketsModel printTicketsDetails(UUID ticketId) {
         Optional<TicketsModel> ticketsOptional = ticketsRepository.findById(ticketId);
-        if (ticketsOptional.isPresent()){
+        if (ticketsOptional.isPresent()) {
             TicketsModel ticket = ticketsOptional.get();
             EventModel event = ticket.getEventModel();
 
             System.out.println("Ticket Details");
-            System.out.println("Event Name: ");
-            System.out.println("Location: ");
-            System.out.println("Date: ");
-            System.out.println("Time: ");
+            System.out.println("Event Name: " + event.getName());
+            System.out.println("Location: " + event.getLocation());
+            System.out.println("Date: " + event.getStartDate().toLocalDate());
+            System.out.println("Time: " + event.getStartDate().toLocalTime());
             System.out.println("Batch Number: " + ticket.getBatchNumber());
-            System.out.println("Seat Number: "+ ticket.getSeatNumber());
+            System.out.println("Seat Number: " + ticket.getSeatNumber());
 
             return ticket;
-        }else {
+        } else {
             throw new IllegalArgumentException("Ticket not found with ID: " + ticketId);
         }
     }
+
 
 }

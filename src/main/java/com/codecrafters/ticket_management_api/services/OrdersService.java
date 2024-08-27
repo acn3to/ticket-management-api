@@ -5,13 +5,17 @@ import com.codecrafters.ticket_management_api.dtos.OrderRecordDto;
 import com.codecrafters.ticket_management_api.dtos.TicketRecordDto;
 import com.codecrafters.ticket_management_api.models.OrdersModel;
 import com.codecrafters.ticket_management_api.models.TicketManager;
+import com.codecrafters.ticket_management_api.models.TicketsModel;
+import com.codecrafters.ticket_management_api.models.User;
 import com.codecrafters.ticket_management_api.repositories.OrdersRepository;
 import com.codecrafters.ticket_management_api.repositories.TicketManagerRepository;
+import com.codecrafters.ticket_management_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,33 +30,30 @@ public class OrdersService {
     @Autowired
     private TicketsManagerService ticketsManagerService;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     public OrdersModel createOrder(OrderRecordDto orderRecordDto) {
-        TicketManager ticketManager = ticketManagerRepository.findByEventModel_Id(orderRecordDto.ticketRecordDto().eventId())
-                .orElseThrow(() -> new IllegalArgumentException("TicketManager not found for event ID: " + orderRecordDto.ticketRecordDto().eventId()));
 
         OrdersModel order = new OrdersModel();
-        //order.setUserId(userId);
-        order.setTicketManager(ticketManager);
-        order.setTotalAmount(orderRecordDto.ticketRecordDto().price().multiply(BigDecimal.valueOf(orderRecordDto.ticketRecordDto().ticketSeat().size())));
-        order.setOrderStatus(EOrdersStatus.Pending);
-        order.setPaymentMethods(orderRecordDto.paymentMethods());
-        order.setQuantityTickets(orderRecordDto.ticketRecordDto().ticketSeat().size());
-
-        ordersRepository.save(order);
 
         TicketRecordDto ticketRecordDto = new TicketRecordDto(
                 orderRecordDto.ticketRecordDto().eventId(),
                 orderRecordDto.ticketRecordDto().ticketSeat(),
-                ticketManager.getId(),
                 orderRecordDto.ticketRecordDto().batchNumber(),
                 orderRecordDto.ticketRecordDto().price(),
                 new Date()
         );
 
-        ticketsManagerService.purchaseTicket(ticketRecordDto);
+        TicketManager ticketManager = ticketsManagerService.purchaseTicket(ticketRecordDto);
 
+        order.setTicketManager(ticketManager);
+        order.setTotalAmount(orderRecordDto.ticketRecordDto().price().multiply(BigDecimal.valueOf(orderRecordDto.ticketRecordDto().ticketSeat().size())));
         order.setOrderStatus(EOrdersStatus.Completed);
+        order.setPaymentMethods(orderRecordDto.paymentMethods());
+        order.setQuantityTickets(orderRecordDto.ticketRecordDto().ticketSeat().size());
+
         ordersRepository.save(order);
 
         return order;

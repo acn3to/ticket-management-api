@@ -54,14 +54,14 @@ public class RatingService {
 //            throw new IllegalArgumentException("Rating, Event, and UserId are required");
 //        }
         // Salvar e retornar a avaliação
-        EventModel eventModel = eventRepository.findById(ratingRecordDto.getEventId())
+        EventModel eventModel = eventRepository.findById(ratingRecordDto.eventId())
                 .orElseThrow(() -> new IllegalArgumentException("Event not found"));
 
 
         RatingModel ratingModel = new RatingModel();
-        ratingModel.setRating(ratingRecordDto.getRating());
+        ratingModel.setRating(ratingRecordDto.rating());
         ratingModel.setEvent(eventModel);
-        ratingModel.setReview(ratingRecordDto.getReview());
+        ratingModel.setReview(ratingRecordDto.review());
 
         return ratingRepository.save(ratingModel);
     }

@@ -1,6 +1,7 @@
 package com.codecrafters.ticket_management_api.models;
 
 import com.codecrafters.ticket_management_api.Enum.EventCategory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -3,10 +3,7 @@ package com.codecrafters.ticket_management_api.models;
 import com.codecrafters.ticket_management_api.Enum.EOrdersStatus;
 import com.codecrafters.ticket_management_api.Enum.EPaymentMethods;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,8 +16,7 @@ import java.util.*;
         @Index(name = "idx_order_status", columnList = "order_status"),
         @Index(name = "idx_order_date", columnList = "create_order_date")
         })
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrdersModel {
@@ -29,9 +25,6 @@ public class OrdersModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_Id",nullable = false)
-    private User userId;
 
     @ManyToOne
     @JoinColumn(name = "ticket_manager_id", nullable = false)

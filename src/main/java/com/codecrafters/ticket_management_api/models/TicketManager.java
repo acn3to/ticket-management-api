@@ -1,18 +1,14 @@
 package com.codecrafters.ticket_management_api.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "ticket_manager")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketManager {
@@ -32,4 +28,5 @@ public class TicketManager {
     private List<TicketsModel> tickets;
 
     private Integer ticketsQuantity;
+
 }

@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record TicketRecordDto( UUID eventId,
                                Map<UUID, String> ticketSeat,
-                               UUID ticketManagerId,
                                Integer batchNumber,
                                BigDecimal price,
                                Date purchaseDate) {

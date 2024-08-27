@@ -1,18 +1,19 @@
 package com.codecrafters.ticket_management_api.specifications;
 
 import com.codecrafters.ticket_management_api.models.OrdersModel;
+import com.codecrafters.ticket_management_api.models.User;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class OrdersSpecifications {
 
     public Specification<OrdersModel> findOrderBy(
-            Long userId,
-            Long orderId,
+            UUID orderId,
             Date beforeDate,
             Date afterDate,
             String orderStatus,
@@ -21,9 +22,6 @@ public class OrdersSpecifications {
         return ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (userId!= null){
-                predicates.add(criteriaBuilder.equal(root.get("userId"),userId));
-            }
             if (orderId!= null){
                 predicates.add(criteriaBuilder.equal(root.get("id"),orderId));
             }
@@ -46,6 +44,7 @@ public class OrdersSpecifications {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         });
     }
+
 }
 
 

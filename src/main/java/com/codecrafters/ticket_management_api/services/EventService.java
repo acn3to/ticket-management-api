@@ -61,18 +61,21 @@ public class EventService {
             throw new IllegalStateException("Event Record Dto is null");
         }
         EventModel eventModel = new EventModel();
-        eventModel.setId(eventRecordDto.getId());
-        eventModel.setName(eventRecordDto.getName());
-        eventModel.setDescription(eventRecordDto.getDescription());
-        eventModel.setCategory(eventRecordDto.getCategory());
-        eventModel.setLocation(eventRecordDto.getLocation());
-        eventModel.setMaxCapacity(eventRecordDto.getMaxCapacity());
-        eventModel.setStartDate(eventRecordDto.getStartDate());
-        eventModel.setEndDate(eventRecordDto.getEndDate());
-        eventModel.setOrganizerId(eventRecordDto.getOrganizerId());
+        eventModel.setId(eventRecordDto.id());
+        eventModel.setName(eventRecordDto.name());
+        eventModel.setDescription(eventRecordDto.description());
+        eventModel.setCategory(eventRecordDto.category());
+        eventModel.setLocation(eventRecordDto.location());
+        eventModel.setMaxCapacity(eventRecordDto.maxCapacity());
+        eventModel.setStartDate(eventRecordDto.startDate());
+        eventModel.setEndDate(eventRecordDto.endDate());
+        eventModel.setOrganizerId(eventRecordDto.organizerId());
         eventModel.setRemainingCapacity(eventModel.getMaxCapacity());
-        eventModel.setStatus(eventRecordDto.getStatus());
-        eventModel.setPrice(eventRecordDto.getPrice());
+        eventModel.setStatus(eventRecordDto.status());
+        eventModel.setPrice(eventRecordDto.price());
+
+        System.out.println("---------------------");
+        System.out.println(eventModel);
 
         eventRepository.save(eventModel);
         return eventModel;

@@ -52,6 +52,7 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<EventModel>  createEvent(@RequestBody EventRecordDto eventRecordDto){
+        System.out.println(eventRecordDto);
         eventService.createEvent(eventRecordDto);
         return ResponseEntity.ok().build();
     }

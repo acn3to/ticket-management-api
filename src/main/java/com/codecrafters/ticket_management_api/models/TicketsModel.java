@@ -16,8 +16,7 @@ import java.util.UUID;
         @Index(name = "idx_ticket_status", columnList = "ticket_status"),
         @Index(name = "idx_purchase_date", columnList = "purchase_date")
         })
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketsModel {

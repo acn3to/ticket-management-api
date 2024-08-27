@@ -6,7 +6,6 @@ import java.util.UUID;
 
 
 public record OrderRecordDto (
-        UUID userId,
         TicketRecordDto ticketRecordDto,
         EPaymentMethods paymentMethods
 ){
