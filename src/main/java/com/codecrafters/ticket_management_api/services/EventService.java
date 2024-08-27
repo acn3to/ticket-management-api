@@ -72,6 +72,7 @@ public class EventService {
         eventModel.setOrganizerId(eventRecordDto.getOrganizerId());
         eventModel.setRemainingCapacity(eventModel.getMaxCapacity());
         eventModel.setStatus(eventRecordDto.getStatus());
+        eventModel.setPrice(eventRecordDto.getPrice());
 
         eventRepository.save(eventModel);
         return eventModel;

@@ -1,4 +1,4 @@
-package com.codecrafters.ticket_management_api.configCORS;
+package com.codecrafters.ticket_management_api.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
