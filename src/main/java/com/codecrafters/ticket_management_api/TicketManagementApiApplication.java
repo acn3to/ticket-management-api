@@ -1,13 +1,13 @@
-package com.codecrafters.task_management_api;
+package com.codecrafters.ticket_management_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TaskManagementApiApplication {
+public class TicketManagementApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TaskManagementApiApplication.class, args);
+		SpringApplication.run(TicketManagementApiApplication.class, args);
 	}
 
 }
