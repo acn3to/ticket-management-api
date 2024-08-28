@@ -29,31 +29,22 @@ public class AuthenticationService {
     private TokenService tokenService;
 
     public LoginResponseDTO login(@Valid AuthenticationDTO data) {
-        System.out.println("Attempting to log in user: " + data.username());
 
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        System.out.println("User authenticated successfully: " + data.username());
-
         var token = tokenService.generateToken((User) auth.getPrincipal());
-        System.out.println("Generating token for user: " + data.username());
 
         return new LoginResponseDTO(token);
     }
 
     @Transactional
     public void register(@Valid CreateUserDTO data) {
-        System.out.println("Attempting to register user: " + data.username());
 
         if (userRepository.findByUsername(data.username()) != null) {
             throw new IllegalArgumentException("Username is already taken");
         }
 
-        System.out.println("Username check passed for: " + data.username());
-
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        System.out.println("Encrypting password for user: " + data.username());
 
         User newUser = User.builder()
                 .id(UUID.randomUUID())
@@ -69,14 +60,6 @@ public class AuthenticationService {
                 .updatedAt(new java.util.Date())
                 .build();
 
-        System.out.println("User object created: " + newUser);
-        System.out.println("Role set for user: " + newUser.getRole());
-        System.out.println("Saving user to the database: " + newUser.getUsername());
-
-        try {
-            userRepository.save(newUser);
-        } catch (Exception e) {
-            System.err.println("Error saving user: " + e.getMessage());
-        }
+        userRepository.save(newUser);
     }
 }

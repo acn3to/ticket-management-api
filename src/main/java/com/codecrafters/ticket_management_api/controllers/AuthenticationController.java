@@ -7,10 +7,7 @@ import com.codecrafters.ticket_management_api.services.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,12 +18,11 @@ public class AuthenticationController {
 
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO authRequest) {
-    System.out.println("Received login request: " + authRequest);
     return ResponseEntity.ok(authenticationService.login(authRequest));
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody @Valid CreateUserDTO data) {
+  public ResponseEntity<?> register(@Valid @RequestBody CreateUserDTO data) {
     authenticationService.register(data);
     return ResponseEntity.ok().build();
   }
