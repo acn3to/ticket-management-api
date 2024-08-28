@@ -17,15 +17,12 @@ public class AuthenticationController {
   private AuthenticationService authenticationService;
 
   @PostMapping("/login")
-
   public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO authRequest) {
-    System.out.println("Received login request: " + authRequest);
     return ResponseEntity.ok(authenticationService.login(authRequest));
   }
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@Valid @RequestBody CreateUserDTO data) {
-    System.out.println("Received registration request for user: " + data.username());
     authenticationService.register(data);
     return ResponseEntity.ok().build();
   }

@@ -1,6 +1,5 @@
 package com.codecrafters.ticket_management_api.config;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +39,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 						.anyRequest().authenticated()
 				)
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
@@ -48,7 +54,17 @@ public class SecurityConfigurations {
 		return new BCryptPasswordEncoder();
 	}
 
-	@PostConstruct
-	public void init() {
+	private CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+		configuration.setAllowedMethods(Collections.singletonList("*"));
+		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(Collections.singletonList("*"));
+		configuration.setExposedHeaders(List.of("Authorization"));
+		configuration.setMaxAge(3600L);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 }
