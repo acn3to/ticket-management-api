@@ -13,17 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-  @Autowired
-  private AuthenticationService authenticationService;
+    @Autowired
+    private AuthenticationService authenticationService;
 
-  @PostMapping("/login")
-  public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO authRequest) {
-    return ResponseEntity.ok(authenticationService.login(authRequest));
-  }
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody AuthenticationDTO authenticationDTO) {
+        LoginResponseDTO response = authenticationService.login(authenticationDTO);
+        return ResponseEntity.ok(response);
+    }
 
-  @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody CreateUserDTO data) {
-    authenticationService.register(data);
-    return ResponseEntity.ok().build();
-  }
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@Valid @RequestBody CreateUserDTO createUserDTO) {
+        authenticationService.register(createUserDTO);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.codecrafters.ticket_management_api.exceptions.CustomException;
 
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class AuthenticationService {
     public void register(@Valid CreateUserDTO data) {
 
         if (userRepository.findByUsername(data.username()) != null) {
-            throw new IllegalArgumentException("Username is already taken");
+            throw new CustomException("Username is already taken");
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
