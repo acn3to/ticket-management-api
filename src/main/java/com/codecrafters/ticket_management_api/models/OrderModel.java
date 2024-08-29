@@ -13,9 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "orders", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
+        @Index(name = "idx_user_order", columnList = "user_id"),
         @Index(name = "idx_order_status", columnList = "order_status"),
-        @Index(name = "idx_order_date", columnList = "order_date")
 })
 @Data
 @NoArgsConstructor

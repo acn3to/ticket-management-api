@@ -55,13 +55,12 @@ public class TicketService {
                     .orElseThrow(() -> new CustomException("Event not found"));
 
             TicketModel newTicket = TicketModel.builder()
-                    .id(UUID.randomUUID())
-                    .eventModel(event)
+                    .event(event)
                     .batchNumber(data.batchNumber())
                     .price(data.price())
                     .seatNumber(data.ticketSeat().get(event.getId()))
                     .purchaseDate(data.purchaseDate())
-                    .ticketStatus(TicketStatusEnum.AVAILABLE)
+                    .ticketStatus(TicketStatusEnum.SOLD)
                     .qrCode(generateQrCode())
                     .build();
 
@@ -73,7 +72,7 @@ public class TicketService {
 
     public List<TicketModel> getTicketsByEventId(UUID eventId) {
         try {
-            return ticketRepository.findByEventId(eventId);
+            return ticketRepository.findByEvent_Id(eventId);
         } catch (Exception e) {
             throw new CustomException("Error retrieving tickets by event ID: " + e.getMessage());
         }

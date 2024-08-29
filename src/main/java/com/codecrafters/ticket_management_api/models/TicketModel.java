@@ -29,7 +29,7 @@ public class TicketModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
-    private EventModel eventModel;
+    private EventModel event;
 
     @Column(name = "batch_number", nullable = false)
     private Integer batchNumber;

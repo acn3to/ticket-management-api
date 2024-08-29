@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "activity_logs", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id"),
+        @Index(name = "idx_user_activity", columnList = "user_id"),
         @Index(name = "idx_created_at", columnList = "created_at")
 })
 @Data

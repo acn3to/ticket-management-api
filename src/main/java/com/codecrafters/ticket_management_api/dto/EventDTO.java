@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record EventDTO(
-        UUID id,
         @NotBlank(message = "Event name is required") String name,
         String description,
         String location,
@@ -20,5 +19,5 @@ public record EventDTO(
         Integer maxCapacity,
         Integer remainingCapacity,
         String status,
-        @NotNull(message = "Price is required") BigDecimal price
-) {}
+        @NotNull(message = "Price is required") BigDecimal price) {
+}

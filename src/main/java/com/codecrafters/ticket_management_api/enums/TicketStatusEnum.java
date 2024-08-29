@@ -6,7 +6,6 @@ import lombok.Getter;
 public enum TicketStatusEnum {
 
     AVAILABLE("AVAILABLE"),
-    RESERVED("RESERVED"),
     SOLD("SOLD"),
     CANCELLED("CANCELLED");
 

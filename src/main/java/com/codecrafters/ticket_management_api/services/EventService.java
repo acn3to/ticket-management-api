@@ -8,6 +8,8 @@ import com.codecrafters.ticket_management_api.repositories.UserRepository;
 import com.codecrafters.ticket_management_api.specs.EventSpecifications;
 import com.codecrafters.ticket_management_api.exceptions.CustomException;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 @Service
 public class EventService {
+    private static final Logger logger = LoggerFactory.getLogger(EventService.class);
 
     @Autowired
     private EventRepository eventRepository;
@@ -40,6 +43,8 @@ public class EventService {
             Integer remainingCapacity,
             LocalDateTime createdAfter,
             String location) {
+        logger.info("Fetching all events with filters: name={}, category={}, organizerId={}, status={}", name, category,
+                organizerId, status);
         try {
             Specification<EventModel> spec = Specification
                     .where(EventSpecifications.hasName(name))
@@ -53,14 +58,18 @@ public class EventService {
                     .and(EventSpecifications.isCreatedAfter(createdAfter))
                     .and(EventSpecifications.hasLocation(location));
 
-            return eventRepository.findAll(spec);
+            List<EventModel> events = eventRepository.findAll(spec);
+            logger.info("Retrieved {} events.", events.size());
+            return events;
         } catch (Exception e) {
+            logger.error("Error retrieving events: {}", e.getMessage());
             throw new CustomException("Error retrieving events: " + e.getMessage());
         }
     }
 
     @Transactional
     public void createEvent(EventDTO data) {
+        logger.info("Creating event with data: {}", data);
         try {
             if (data == null) {
                 throw new CustomException("EventDTO cannot be null");
@@ -68,9 +77,10 @@ public class EventService {
 
             var organizer = userRepository.findById(data.organizerId())
                     .orElseThrow(() -> new CustomException("Organizer not found"));
+            logger.info("Organizer found: {}", organizer);
 
             EventModel newEvent = EventModel.builder()
-                    .id(data.id())
+                    .id(UUID.randomUUID())
                     .name(data.name())
                     .description(data.description())
                     .category(data.category())
@@ -85,34 +95,29 @@ public class EventService {
                     .build();
 
             eventRepository.save(newEvent);
+            logger.info("Event created successfully: {}", newEvent);
         } catch (Exception e) {
+            logger.error("Error creating event: {}", e.getMessage());
             throw new CustomException("Error creating event: " + e.getMessage());
         }
     }
 
     public Optional<EventModel> getEventById(UUID id) {
+        logger.info("Fetching event with ID: {}", id);
         try {
-            return eventRepository.findEventById(id)
-                    .or(() -> {
-                        throw new CustomException("Event not found with ID: " + id);
-                    });
+            return eventRepository.findById(id);
         } catch (Exception e) {
-            throw new CustomException("Error retrieving event: " + e.getMessage());
-        }
-    }
-
-    public List<EventModel> getEventsByOrganizer(UUID organizerId) {
-        try {
-            return eventRepository.findByOrganizerId(organizerId);
-        } catch (Exception e) {
-            throw new CustomException("Error retrieving events by organizer: " + e.getMessage());
+            logger.error("Error retrieving event by ID: {} - {}", id, e.getMessage());
+            throw new CustomException("Error retrieving event by ID: " + e.getMessage());
         }
     }
 
     public List<EventModel> getEventsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        logger.info("Fetching events between dates: {} and {}", startDate, endDate);
         try {
             return eventRepository.findEventsByDateRange(startDate, endDate);
         } catch (Exception e) {
+            logger.error("Error retrieving events by date range: {}", e.getMessage());
             throw new CustomException("Error retrieving events by date range: " + e.getMessage());
         }
     }
