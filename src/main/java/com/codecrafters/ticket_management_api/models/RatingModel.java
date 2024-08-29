@@ -2,6 +2,7 @@ package com.codecrafters.ticket_management_api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,12 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "ratings", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"event_id", "user_id"})
+        @UniqueConstraint(columnNames = { "event_id", "user_id" })
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RatingModel {
 
     @Id
@@ -30,9 +32,10 @@ public class RatingModel {
     @JsonIgnore
     private EventModel event;
 
-    // Sem acesso ao UserModel, @Neto ficou de criar esta parte, usamos um mock para efeitos de teste.
-    @Column(name = "user_id", nullable = false)
-    private UUID userId = UUID.randomUUID();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private UserModel user;
 
     @Column(name = "rating", nullable = false, precision = 2, scale = 1)
     private BigDecimal rating;
@@ -47,7 +50,4 @@ public class RatingModel {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
 }
-
-

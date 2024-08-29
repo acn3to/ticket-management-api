@@ -1,11 +1,12 @@
 package com.codecrafters.ticket_management_api.models;
 
-import com.codecrafters.ticket_management_api.Enum.EventCategory;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.codecrafters.ticket_management_api.enums.EventCategoryEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -22,8 +23,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-
+@Builder
 public class EventModel {
 
     @Id
@@ -45,12 +45,13 @@ public class EventModel {
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
-
     @Enumerated(EnumType.STRING)
-    public EventCategory category;
+    @Column(name = "category", nullable = false, length = 50)
+    private EventCategoryEnum category;
 
-    @Column(name = "organizer_id", nullable = false)
-    private UUID organizerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id", nullable = false)
+    private UserModel organizer;
 
     @Column(name = "max_capacity", nullable = false)
     private int maxCapacity;
@@ -71,5 +72,4 @@ public class EventModel {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
 }

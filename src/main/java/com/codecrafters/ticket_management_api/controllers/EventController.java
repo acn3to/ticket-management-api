@@ -1,9 +1,10 @@
 package com.codecrafters.ticket_management_api.controllers;
 
-import com.codecrafters.ticket_management_api.Enum.EventCategory;
-import com.codecrafters.ticket_management_api.dtos.EventRecordDto;
+import com.codecrafters.ticket_management_api.enums.EventCategoryEnum;
+import com.codecrafters.ticket_management_api.dto.EventDTO;
 import com.codecrafters.ticket_management_api.models.EventModel;
 import com.codecrafters.ticket_management_api.services.EventService;
+import com.codecrafters.ticket_management_api.exceptions.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,9 @@ public class EventController {
     private EventService eventService;
 
     @GetMapping
-    public List<EventModel> getEvents(
+    public ResponseEntity<List<EventModel>> getEvents(
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) EventCategory category,
+            @RequestParam(required = false) EventCategoryEnum category,
             @RequestParam(required = false) UUID organizerId,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) LocalDateTime startTimeAfter,
@@ -35,25 +36,40 @@ public class EventController {
             @RequestParam(required = false) Integer minCapacity,
             @RequestParam(required = false) Integer remainingCapacity,
             @RequestParam(required = false) LocalDateTime createdAfter,
-            @RequestParam(required = false) String location
-    ) {
-        return eventService.getAllEvents(
-                name, category, organizerId, status, startTimeAfter, startTimeBefore,
-                minPrice, maxPrice, minCapacity, remainingCapacity, createdAfter, location
-        );
+            @RequestParam(required = false) String location) {
+        try {
+            List<EventModel> events = eventService.getAllEvents(
+                    name, category, organizerId, status, startTimeAfter, startTimeBefore,
+                    minPrice, maxPrice, minCapacity, remainingCapacity, createdAfter, location);
+            return ResponseEntity.ok(events);
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
-    // Solicitação do Coojak
     @GetMapping("/{id}")
     public ResponseEntity<EventModel> getEventById(@PathVariable UUID id) {
-        Optional<EventModel> event = eventService.getEventById(id);
-        return event.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            Optional<EventModel> event = eventService.getEventById(id);
+            return event.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @PostMapping
-    public ResponseEntity<EventModel>  createEvent(@RequestBody EventRecordDto eventRecordDto){
-        System.out.println(eventRecordDto);
-        eventService.createEvent(eventRecordDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> createEvent(@RequestBody EventDTO eventDTO) {
+        try {
+            eventService.createEvent(eventDTO);
+            return ResponseEntity.status(201).build();
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 }
