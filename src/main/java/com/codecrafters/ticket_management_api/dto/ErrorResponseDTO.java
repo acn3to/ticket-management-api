@@ -11,5 +11,4 @@ public class ErrorResponseDTO {
     public ErrorResponseDTO(List<String> errors) {
         this.errors = errors;
     }
-
 }
